@@ -1,0 +1,1 @@
+Zadania 1-12 są takie same jak w zadaniach z laboratorium 2 i zostały zrealizowane w folderze pas_lab2.
