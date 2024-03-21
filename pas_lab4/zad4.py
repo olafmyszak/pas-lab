@@ -1,6 +1,6 @@
 import socket
 
-server_address = ('localhost', 2902)
+server_address = ('localhost', 2904)
 
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
     s.bind(server_address)

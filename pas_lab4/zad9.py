@@ -7,7 +7,7 @@ def use_regex(input_text):
     return pattern.match(input_text)
 
 
-server_address = ('localhost', 2910)
+server_address = ('localhost', 2909)
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 

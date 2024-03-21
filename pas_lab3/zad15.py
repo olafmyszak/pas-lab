@@ -1,36 +1,46 @@
 import socket
 
 
-def hex_to_dec(hex_str):
-    return int(hex_str, 16)
+def extract_tcp_data(datagram):
+    src_port = int(datagram[0:4], 16)
+    dst_port = int(datagram[4:8], 16)
+    data = int(datagram[44:], 16)
+    return src_port, dst_port, data
+
+
+def extract_udp_data(datagram):
+    src_port = int(datagram[0:4], 16)
+    dst_port = int(datagram[4:8], 16)
+    data = int(datagram[16:], 16)
+    return src_port, dst_port, data
 
 
 def extract_ipv4_packet_info(hex_packet):
-    version = hex_to_dec(hex_packet[0]) >> 4
-    src_ip = '.'.join(str(hex_to_dec(hex_packet[i:i + 2])) for i in range(12, 16))
-    dst_ip = '.'.join(str(hex_to_dec(hex_packet[i:i + 2])) for i in range(16, 20))
-    protocol = hex_to_dec(hex_packet[9])
+    version = int(hex_packet[0], 16)
+    protocol = int(hex_packet[18:20], 16)
+    src_ip = int(hex_packet[24:32], 16)
+    dst_ip = int(hex_packet[32:40], 16)
 
     if protocol == 6:
-        src_port = hex_to_dec(hex_packet[20:24])
-        dst_port = hex_to_dec(hex_packet[24:28])
-        data_length = hex_to_dec(hex_packet[28:32]) - 20
+        src_port, dst_port, data = extract_tcp_data(hex_packet[40:])
     elif protocol == 17:
-        src_port = hex_to_dec(hex_packet[20:24])
-        dst_port = hex_to_dec(hex_packet[24:28])
-        data_length = hex_to_dec(hex_packet[28:32]) - 8
+        src_port, dst_port, data = extract_udp_data(hex_packet[40:])
     else:
         return None
 
-    return version, src_ip, dst_ip, protocol, src_port, dst_port, data_length
+    return version, src_ip, dst_ip, protocol, src_port, dst_port, data
 
 
 def send_udp_message(message):
-    UDP_IP = "212.182.24.27"
-    UDP_PORT = 2911
+    ip = "127.0.0.1"
+    port = 2911
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-        sock.sendto(message.encode(), (UDP_IP, UDP_PORT))
-        data, _ = sock.recvfrom(1024)
+        try:
+            sock.sendto(message.encode(), (ip, port))
+            data, _ = sock.recvfrom(1024)
+        except socket.error as e:
+            return e
+
     return data.decode()
 
 
@@ -38,17 +48,16 @@ hex_packet = "4500004ef7fa400038069d33d4b6181bc0a800020b54b9a6fbf93c57c10a06c180
 ipv4_info = extract_ipv4_packet_info(hex_packet)
 
 if ipv4_info:
-    ver, src_ip, dst_ip, protocol, src_port, dst_port, data_len = ipv4_info
-    message_a = f"zad15odpA;{ver};{src_ip};{dst_ip};{protocol}"
+    ver, src_ip, dst_ip, protocol, src_port, dst_port, data = ipv4_info
+    message_a = f"zad15odpA;ver;{ver};srcip;{src_ip};dstip;{dst_ip};type;{protocol}"
     response_a = send_udp_message(message_a)
     print("Odpowiedź A:", response_a)
 
     if response_a == "TAK":
-        message_b = f"zad15odpB;{src_port};{dst_port};{data_len}"
+        message_b = f"zad15odpB;srcport;{src_port};dstport;{dst_port};data;{data}"
         response_b = send_udp_message(message_b)
         print("Odpowiedź B:", response_b)
     else:
         print("Odpowiedź A nie jest poprawna.")
 else:
     print("Niepoprawny pakiet IPv4.")
-
