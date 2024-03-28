@@ -1,8 +1,6 @@
 import ipaddress
-import sys
 
 inp = input("Enter IP Address: ")
-
 
 try:
     ip = ipaddress.ip_address(inp)

@@ -33,7 +33,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             elif messageA_correct:
                 messageA_correct = False
                 if use_regex(data, "zad15odpB;srcport;[0-9]+;dstport;[0-9]+;data;[0-9]+"):
-                    if data == "zad15odpB;srcport;2900;dstport;47526;data;15617344897515034349418636211077958225135483338141217080373756523057991302338616653166":
+                    if data == ("zad15odpB;srcport;2900;dstport;47526;data;15617344897515034349418636211077958225135483"
+                                "338141217080373756523057991302338616653166"):
                         sock.sendto("TAK".encode(), client_address)
                     else:
                         sock.sendto("NIE".encode(), client_address)

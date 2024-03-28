@@ -1,5 +1,5 @@
-import socket
 import re
+import socket
 
 
 def use_regex(input_text):
@@ -24,4 +24,3 @@ while True:
             server_socket.sendto("NIE".encode(), client_address)
     else:
         server_socket.sendto("BAD_SYNTAX".encode(), client_address)
-

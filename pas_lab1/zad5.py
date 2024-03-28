@@ -1,8 +1,4 @@
 import socket
-import sys
-
-# print(f"IP address: {sys.argv[1]}")
-# print(f"IP is {socket.gethostbyname(sys.argv[1])}")
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 

@@ -1,5 +1,5 @@
-import socket
 import re
+import socket
 
 
 def use_regex(input_text):

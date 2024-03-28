@@ -18,4 +18,3 @@ if data:
     t -= REF_TIME_1970
 
 print(time.ctime(t))
-

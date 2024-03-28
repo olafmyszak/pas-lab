@@ -34,4 +34,3 @@ while i < MAX and j < MAX:
     port_scan(HOST, PORTS)
     i = j
     j += 10000
-
