@@ -9,6 +9,6 @@
 # GitHub Copilot persisted chat sessions
 /copilot/chatSessions
 
-find_middle_letter.py
-gensql.py
-gensql2.py
+*/find_middle_letter.py
+*/gensql.py
+*/gensql2.py
