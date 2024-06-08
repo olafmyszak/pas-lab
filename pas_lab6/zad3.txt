@@ -1,0 +1,46 @@
+3. Wykorzystując protokół telnet oraz serwer ESMTP działający pod adresem interia.pl na porcie 587 wyślij wiadomość spoofed email (z podmienionym adresem nadawcy) używając komend protokołu ESMTP.
+
+Kroki:
+
+1. Otwórz terminal i wpisz:
+   telnet interia.pl 587
+
+2. Inicjuj sesję ESMTP:
+   EHLO interia.pl
+
+3. Rozpocznij szyfrowanie:
+   STARTTLS
+
+4. Zakończ sesję Telnet i ponownie połącz się używając OpenSSL:
+   openssl s_client -connect interia.pl:587 -starttls smtp
+
+5. Ponownie wpisz:
+   EHLO interia.pl
+
+6. Zaloguj się:
+   AUTH LOGIN
+
+   Użyj zaszyfrowanych Base64 danych:
+   - Username (base64): cGFzMjAxN0BpbnRlcmlhLnBs
+   - Password (base64): UDRTSW5mMjAxNw==
+
+7. Podaj fałszywego nadawcę:
+   MAIL FROM:<fake@example.com>
+
+8. Podaj odbiorcę:
+   RCPT TO:<odbiorca@example.com>
+
+9. Podaj treść wiadomości:
+   DATA
+   Subject: Spoofed Email
+   To: odbiorca@example.com
+   From: fake@example.com
+
+   Treść spoofed wiadomości.
+
+   .
+
+10. Zakończ sesję:
+   QUIT
+
+Uwaga: Wysyłanie spoofed e-maili może być nielegalne i nieetyczne. Używaj tego tylko do celów edukacyjnych.

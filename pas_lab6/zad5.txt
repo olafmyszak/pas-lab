@@ -1,0 +1,64 @@
+5. Wykorzystując protokół telnet oraz serwer ESMTP działający pod adresem interia.pl na porcie 587 wyślij wiadomość e-mail używając komend protokołu ESMTP. Do wiadomości dodaj załącznik - dowolny obrazek (sprawdź format MIME: Multipart i Content-Type). Możesz wykorzystać openssl do przekonwertowania obrazka: cat obrazek | openssl base64.
+
+Kroki:
+
+1. Przygotuj obrazek (przykład użycia istniejącego pliku):
+   cp /ścieżka/do/obrazka.jpg obrazek.jpg
+
+2. Zakoduj obrazek w base64:
+   cat obrazek.jpg | openssl base64 > obrazek.jpg.b64
+
+3. Otwórz terminal i wpisz:
+   telnet interia.pl 587
+
+4. Inicjuj sesję ESMTP:
+   EHLO interia.pl
+
+5. Rozpocznij szyfrowanie:
+   STARTTLS
+
+6. Zakończ sesję Telnet i ponownie połącz się używając OpenSSL:
+   openssl s_client -connect interia.pl:587 -starttls smtp
+
+7. Ponownie wpisz:
+   EHLO interia.pl
+
+8. Zaloguj się:
+   AUTH LOGIN
+
+   Użyj zaszyfrowanych Base64 danych:
+   - Username (base64): cGFzMjAxN0BpbnRlcmlhLnBs
+   - Password (base64): UDRTSW5mMjAxNw==
+
+9. Podaj nadawcę:
+   MAIL FROM:<pas2017@interia.pl>
+
+10. Podaj odbiorcę:
+   RCPT TO:<odbiorca@example.com>
+
+11. Podaj treść wiadomości z załącznikiem:
+   DATA
+   Subject: Test Email with Image Attachment
+   To: odbiorca@example.com
+   From: pas2017@interia.pl
+   MIME-Version: 1.0
+   Content-Type: multipart/mixed; boundary=sep
+
+   --sep
+   Content-Type: text/plain
+
+   Treść wiadomości.
+
+   --sep
+   Content-Type: image/jpeg; name="obrazek.jpg"
+   Content-Transfer-Encoding: base64
+   Content-Disposition: attachment; filename="obrazek.jpg"
+
+   <zawartość obrazka base64>
+
+   --sep--
+
+   .
+
+12. Zakończ sesję:
+   QUIT
